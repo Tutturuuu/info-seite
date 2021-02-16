@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Corona - Infoseite</title>
+    <link rel="icon" type="image/png" sizes="1600x1600" href="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="1600x1600" href="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="1600x1600" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora">
+    <link rel="stylesheet" href="/assets/css/styles.min.css">
+<script>
+      getCovidData();
+
+      function getCovidData() {
+        // HTTP GET an die API
+        fetch("https://api.corona-zahlen.org/germany", {
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          }}).catch(function (error) {
+            // Falls ein Fehler auftritt
+            console.warn("Error: " + error);
+            var mainNode = document.getElementById("tracker-mount");
+            mainNode.innerHTML = "";
+            var node = document.createElement("pre");
+            node.innerHTML = "Konnte daten nicht erhalten";
+            mainNode.appendChild(node);
+          }).then(function (response) {
+            // JSON aus der Antwort holen
+            response.json().then(function(value) {
+              setInterval(setCovidData, 100, value);
+          })
+        });
+      }
+
+      function setCovidData(value) {
+        // Hauptnode extrahieren
+        var mainNode = document.getElementById("tracker-mount");
+        mainNode.innerHTML = "";
+
+        //console.log(value);
+        
+        // Zeit seit der UNIX-Epoche
+        var sinceUnixEpoch = (new Date().getTime() / 86400) % 1;
+
+        // Daten als HTML hinzufügen
+        var cases = parseInt(value.cases) + Math.floor(sinceUnixEpoch * value.delta.cases);
+        var deaths = parseInt(value.deaths) + Math.floor(sinceUnixEpoch * value.delta.deaths);
+        var recovered = parseInt(value.recovered) + Math.floor(sinceUnixEpoch * value.delta.recovered);
+        mainNode.appendChild(addNode("Bestätigt: ", cases.toLocaleString('de')));
+        mainNode.appendChild(addNode("Tot: ", deaths.toLocaleString('de')));
+        mainNode.appendChild(addNode("Erholt: ", recovered.toLocaleString('de')));
+      }
+
+      function addNode(titleString, valueString) {
+        var wrapper = document.createElement("div");
+        var title = document.createElement("pre");
+        var confirmed = document.createElement("pre");
+        
+        title.innerHTML = titleString;
+        confirmed.innerHTML = valueString;
+        
+        wrapper.style.display = "flex";
+
+        wrapper.appendChild(title);
+        wrapper.appendChild(confirmed);
+        
+        return wrapper;
+      }
+</script>
+</head>
+
+<body style="background: linear-gradient(rgb(42,42,42), var(--purple) 100%), rgb(59,59,59);">
+    <div class="col" style="padding-bottom: 19px;">
+        <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="width: 80%;padding: 0px;height: 42px;padding-bottom: 0px;border-bottom-right-radius: 13px;border-bottom-left-radius: 13px;">
+            <div class="container"><a class="navbar-brand" href="/index.html">Corona - Informationen</a>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item"></li>
+                        <li class="nav-item"></li>
+                        <li class="nav-item"></li>
+                        <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Mehr</a>
+                            <div class="dropdown-menu"><a class="dropdown-item" href="/fakten.html">Fakten</a><a class="dropdown-item" href="/regeln.html">Regeln</a><a class="dropdown-item" href="/mythen.html">Mythen</a>
+                                <div class="dropdown-divider"></div><a class="dropdown-item" href="/warum.html">Weitere Infos</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div style="padding-bottom: 27px;">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="jumbotron" style="background: #ffffff;">
+                        <h1>Das Coronavirus</h1>
+                        <p>Auch in Zeiten der Corona-Krise Informiert bleiben.</p>
+                        <p><a class="btn btn-primary" role="button" href="/fakten.html" style="background: var(--indigo);border-style: none;">Zu den Fakten</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="jumbotron" style="background: #ffffff;">
+                        <h1>Die aktuellen Regeln</h1>
+                        <p>Wie schütze ich mich? Was darf ich? Und wann hört das alles endlich wieder auf?</p>
+                        <p><a class="btn btn-primary" role="button" style="background: var(--indigo);border-style: none;" href="/regeln.html">Zu den Regeln</a></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="jumbotron" style="background: #ffffff;">
+                        <h1>Mythen</h1>
+                        <p>Wird das Virus von Bill Gates gesteuert? Ist ein Chip in der Impfung?</p>
+                        <p><a class="btn btn-primary" role="button" style="background: var(--indigo);border-style: none;" href="/mythen.html">Zu den Mythen</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-clean" style="background: rgba(0,0,0,0.6);height: 100%;border-top-left-radius: 13px;border-top-right-radius: 13px;">
+        <footer>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-sm-4 col-md-3 item" style="color: rgb(255,255,255);">
+                        <h3>Seiten</h3>
+                        <ul>
+                            <li><a href="/fakten.html">Fakten</a></li>
+                            <li><a href="/mythen.html">Mythen</a></li>
+                            <li><a href="/regeln.html">Regeln</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 item" style="color: rgb(255,255,255);">
+                        <h3>Über uns</h3>
+                        <ul>
+                            <li><a href="/warum.html">Warum diese Seite existiert</a></li>
+                            <li></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 item" style="color: rgb(255,255,255);">
+                        <h3>Service</h3>
+                        <ul>
+                            <li><a href="/kontakt.html">Kontakt</a></li>
+                            <li><a href="https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquoten-Tab.html">Impfkarte</a></li>
+                            <li><a href="/impressum.html">Impressum &amp; Quellen<br><br></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Corona - Infoseite</title>
+    <link rel="icon" type="image/png" sizes="1600x1600" href="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="1600x1600" href="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="1600x1600" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora">
+    <link rel="stylesheet" href="/assets/css/styles.min.css">
+<script>
+      getCovidData();
+
+      function getCovidData() {
+        // HTTP GET an die API
+        fetch("https://api.corona-zahlen.org/germany", {
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          }}).catch(function (error) {
+            // Falls ein Fehler auftritt
+            console.warn("Error: " + error);
+            var mainNode = document.getElementById("tracker-mount");
+            mainNode.innerHTML = "";
+            var node = document.createElement("pre");
+            node.innerHTML = "Konnte daten nicht erhalten";
+            mainNode.appendChild(node);
+          }).then(function (response) {
+            // JSON aus der Antwort holen
+            response.json().then(function(value) {
+              setInterval(setCovidData, 100, value);
+          })
+        });
+      }
+
+      function setCovidData(value) {
+        // Hauptnode extrahieren
+        var mainNode = document.getElementById("tracker-mount");
+        mainNode.innerHTML = "";
+
+        //console.log(value);
+        
+        // Zeit seit der UNIX-Epoche
+        var sinceUnixEpoch = (new Date().getTime() / 86400) % 1;
+
+        // Daten als HTML hinzufügen
+        var cases = parseInt(value.cases) + Math.floor(sinceUnixEpoch * value.delta.cases);
+        var deaths = parseInt(value.deaths) + Math.floor(sinceUnixEpoch * value.delta.deaths);
+        var recovered = parseInt(value.recovered) + Math.floor(sinceUnixEpoch * value.delta.recovered);
+        mainNode.appendChild(addNode("Bestätigt: ", cases.toLocaleString('de')));
+        mainNode.appendChild(addNode("Tot: ", deaths.toLocaleString('de')));
+        mainNode.appendChild(addNode("Erholt: ", recovered.toLocaleString('de')));
+      }
+
+      function addNode(titleString, valueString) {
+        var wrapper = document.createElement("div");
+        var title = document.createElement("pre");
+        var confirmed = document.createElement("pre");
+        
+        title.innerHTML = titleString;
+        confirmed.innerHTML = valueString;
+        
+        wrapper.style.display = "flex";
+
+        wrapper.appendChild(title);
+        wrapper.appendChild(confirmed);
+        
+        return wrapper;
+      }
+</script>
+</head>
+
+<body style="background: linear-gradient(rgb(42,42,42), var(--purple) 100%), rgb(59,59,59);">
+    <div class="col" style="padding-bottom: 19px;">
+        <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="width: 80%;padding: 0px;height: 42px;padding-bottom: 0px;border-bottom-right-radius: 13px;border-bottom-left-radius: 13px;">
+            <div class="container"><a class="navbar-brand" href="/index.html">Corona - Informationen</a>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item"></li>
+                        <li class="nav-item"></li>
+                        <li class="nav-item"></li>
+                        <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Mehr</a>
+                            <div class="dropdown-menu"><a class="dropdown-item" href="/fakten.html">Fakten</a><a class="dropdown-item" href="/regeln.html">Regeln</a><a class="dropdown-item" href="/mythen.html">Mythen</a>
+                                <div class="dropdown-divider"></div><a class="dropdown-item" href="/weitere.html">Weitere Infos</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container" style="width: 95%;padding-bottom: 311px;height: 747px;">
+        <h1 class="text-center" style="color: rgb(0,0,0);border-top-left-radius: 13px;border-top-right-radius: 13px;background: #ffffff;width: 100%;margin: 0 auto;border-width: 1px;border-style: solid;">Mythen</h1>
+        <div role="tablist" id="accordion-1">
+            <div class="card">
+                <div class="card-header" role="tab">
+                    <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1">Mythos 1: Das Coronavirus wurde von Chinesischen Wissenschaftlern absichtlich freigesetzt</a></h5>
+                </div>
+                <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
+                    <div class="card-body">
+                        <p class="card-text">Schon zu Beginn der Pandemie im März wurde eine Studie in der Fachzeitschrift&nbsp;<em>Nature</em>&nbsp;veröffentlicht. Darin kamen die Autoren zu dem Schluss, dass es unwahrscheinlich sei, dass das Coronavirus in einem Labor hergestellt wurde. Laut einem Experten liegt das zum Beispiel am Aufbau der Bindestelle zwischen Virus und Zelle: „Wenn man so ein Virus absichtlich konstruieren wollte, würde es anders aussehen.“ Auch der Virologe Christian Drosten sagte in der Diskussion um den Aufbau des Coronavirus schon im Mai: „Wir wiederholen hier eine Diskussion, die wir um die Influenza auch schon geführt haben.“ Schon seit vielen Jahren sei klar, dass so etwas in der Natur entstehe – unter Selektionsdruck, weil es dem Virus etwas nütze, sagte er im NDR-Podcast damals.<br></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" role="tab">
+                    <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-2" href="#accordion-1 .item-2">Mythos 2: Die mRNA Impfung manipuliert die Gene des Menschen</a></h5>
+                </div>
+                <div class="collapse item-2" role="tabpanel" data-parent="#accordion-1">
+                    <div class="card-body">
+                        <p class="card-text">Die mRNA-Impfstoffe können nach heutigem Wissensstand nicht in das Genom menschlicher Körperzellen eindringen und dieses verändern. Bei einem mRNA-Impfstoff wird dem Patienten eine Messenger-Ribonukleinsäure verabreicht, die den genetischen Code für ein Protein enthält. Die neuartigen Impfstoffe enthalten lediglich ausgewählte Teile des Erbguts eines Virus, die nach der Impfung im Körper eine Immunantwort verursachen. So wird der Immunschutz aufgebaut. Die mRNA aus dem Impfstoff kann jedoch nicht einfach in die DNA des Menschen "eingebaut" werden, denn diese befindet sich im Zellkern.<br></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" role="tab">
+                    <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-3" href="#accordion-1 .item-3">Mythos 3:&nbsp;Steckt Bill Gates hinter dem Impfstoff?<br></a></h5>
+                </div>
+                <div class="collapse item-3" role="tabpanel" data-parent="#accordion-1">
+                    <div class="card-body">
+                        <p class="card-text">Tatsächlich schrieb Gates in einem Blogbeitrag im Frühjahr, dass jeder vielleicht irgendwann ein "digitales Zertifikat" haben werde, das bezeuge, dass er geimpft oder anderweitig immunisiert sei. Von Mikrochips war allerdings nie die Rede. Seine Aussage wurde in einen falschen Zusammenhang gestellt – höchstwahrscheinlich mit dem Projekt der Gates-Stiftung, in dem zu Verhütungsmethoden via Mikrochips geforscht wird.<br></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" role="tab">
+                    <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-4" href="#accordion-1 .item-4">Mythos 4: Wird es eine Impfpflicht geben?</a></h5>
+                </div>
+                <div class="collapse item-4" role="tabpanel" data-parent="#accordion-1">
+                    <div class="card-body">
+                        <p class="card-text">Die Bundesregierung hat immer wieder betont, dass die Impfung gegen das Coronavirus freiwillig sei. Es werde jedoch eine starke Impfempfehlung ausgesprochen, um sich nicht nur selbst, sondern die Gemeinschaft zu schützen.Allerdings gibt es Diskussionen darüber, bestimmte Berufszweige zu einer Impfung zu verpflichten, beispielsweise Soldaten oder Polizisten. Weltärztepräsident Frank-Ulrich Montgomery hat sich beispielsweise für eine Impfpflicht für bestimmte Berufsgruppen ausgesprochen: „Wer Umgang mit vulnerablen Gruppen hat, muss immunisiert sein“, sagte der Vorsitzende des Weltärztebundes dieser Redaktion. „Für Pflegekräfte und medizinisches Personal ist eine berufsspezifische Impfpflicht gegen Corona sinnvoll“, sagte Montgomery.<br></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" role="tab">
+                    <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-5" href="#accordion-1 .item-5">Mythos 5: Corona wird über 5G verteilt</a></h5>
+                </div>
+                <div class="collapse item-5" role="tabpanel" data-parent="#accordion-1">
+                    <div class="card-body">
+                        <p class="card-text">Die neuen 5G-Sendemasten sind für die Verbreitung des Coronavirus verantwortlich. In Großbritannien wurde daher unter vielen Masten Feuer gelegt. Auch die Menschen in Wuhan sollen an der Strahlung von 5G erkrankt und gestorben sein, nicht aber am Virus.&nbsp;Wahlweise aktiviere die Strahlung das Virus auch erst. In Afrika gebe es keine Corona-Toten, weil es dort kein 5G-Netz&nbsp;gebe.<br></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-clean" style="background: rgba(0,0,0,0.6);height: 141%;border-top-left-radius: 13px;border-top-right-radius: 13px;">
+        <footer>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-sm-4 col-md-3 item" style="color: rgb(255,255,255);">
+                        <h3>Seiten</h3>
+                        <ul>
+                            <li><a href="/fakten.html">Fakten</a></li>
+                            <li><a href="/mythen.html">Mythen</a></li>
+                            <li><a href="/regeln.html">Regeln</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 item" style="color: rgb(255,255,255);">
+                        <h3>Über uns</h3>
+                        <ul>
+                            <li><a href="/warum.html">Warum diese Seite existiert</a></li>
+                            <li></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 item" style="color: rgb(255,255,255);">
+                        <h3>Service</h3>
+                        <ul>
+                            <li><a href="/kontakt.html">Kontakt</a></li>
+                            <li><a href="https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquoten-Tab.html">Impfkarte</a></li>
+                            <li><a href="/impressum.html">Impressum</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
